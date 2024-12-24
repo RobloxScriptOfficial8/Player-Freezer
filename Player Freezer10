@@ -1,0 +1,71 @@
+-- Parent: ScreenGui
+local gui = script.Parent
+
+-- GUI Elements
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 300, 0, 150)
+frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+frame.Draggable = true
+frame.Active = true
+
+local nameBox = Instance.new("TextBox", frame)
+nameBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+nameBox.Position = UDim2.new(0.1, 0, 0.1, 0)
+nameBox.PlaceholderText = "Enter Player Name"
+nameBox.Text = ""
+nameBox.BackgroundColor3 = Color3.new(1, 1, 1)
+
+local freezeButton = Instance.new("TextButton", frame)
+freezeButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+freezeButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+freezeButton.Text = "Freeze"
+freezeButton.BackgroundColor3 = Color3.new(1, 0, 0)
+
+local unfreezeButton = Instance.new("TextButton", frame)
+unfreezeButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+unfreezeButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+unfreezeButton.Text = "Unfreeze"
+unfreezeButton.BackgroundColor3 = Color3.new(0, 1, 0)
+
+-- Functions
+local function getPlayerByName(name)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Name:lower() == name:lower() then
+            return player
+        end
+    end
+    return nil
+end
+
+local function freezePlayer(name)
+    local player = getPlayerByName(name)
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character.HumanoidRootPart.Anchored = true
+        print(player.Name .. " has been frozen.")
+    else
+        warn("Player not found or invalid.")
+    end
+end
+
+local function unfreezePlayer(name)
+    local player = getPlayerByName(name)
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        player.Character.HumanoidRootPart.Anchored = false
+        print(player.Name .. " has been unfrozen.")
+    else
+        warn("Player not found or invalid.")
+    end
+end
+
+-- Button Click Handlers
+freezeButton.MouseButton1Click:Connect(function()
+    local playerName = nameBox.Text
+    freezePlayer(playerName)
+end)
+
+unfreezeButton.MouseButton1Click:Connect(function()
+    local playerName = nameBox.Text
+    unfreezePlayer(playerName)
+end)
